@@ -56,6 +56,6 @@ namespace FlexRM.Core.Application.Terminal
     {
         Win,
         Mac,
-        Gnu
+        Gnu,
     }
 }
