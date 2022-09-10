@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Generation\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="dein.ToolBox" Version="1.10.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FlexRM.Core.Domain\FlexRM.Core.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
