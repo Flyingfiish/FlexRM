@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Generation\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="dein.ToolBox" Version="1.10.0" />
   </ItemGroup>
 

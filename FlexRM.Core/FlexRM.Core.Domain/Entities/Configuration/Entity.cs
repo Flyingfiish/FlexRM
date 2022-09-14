@@ -9,6 +9,6 @@ namespace FlexRM.Core.Domain.Entities.Configuration
 {
     public class Entity : Base
     {
-
+        public List<Column> Columns { get; set; } = new List<Column>();
     }
 }
