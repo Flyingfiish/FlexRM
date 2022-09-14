@@ -1,17 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>preview</LangVersion>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="dein.ToolBox" Version="1.10.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="dein.ToolBox" Version="1.10.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FlexRM.Core.Domain\FlexRM.Core.Domain.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\FlexRM.Core.Domain\FlexRM.Core.Domain.csproj" />
+	</ItemGroup>
 
 </Project>

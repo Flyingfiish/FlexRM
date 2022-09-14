@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FlexRM.Core.Application.Generation.Snippets
 {
-    public class EntitySourceSnippets
+    public class SourceSnippets
     {
         public static string OpenBracket = "{";
         public static string CloseBracket = "}";

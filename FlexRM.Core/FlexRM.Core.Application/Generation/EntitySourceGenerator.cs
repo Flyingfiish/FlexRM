@@ -1,6 +1,9 @@
-﻿using FlexRM.Core.Application.Generation.Interfaces;
+﻿using FlexRM.Core.Application.Generation.Common;
+using FlexRM.Core.Application.Generation.Interfaces;
 using FlexRM.Core.Application.Generation.Snippets;
 using FlexRM.Core.Domain.Entities.Configuration;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace FlexRM.Core.Application.Generation
 {
-    public class EntitySourceGenerator : IEntitySourceGenerator
+    public class EntitySourceGenerator : SourceGenerator, IEntitySourceGenerator
     {
         private readonly Entity _entity;
         private readonly StringBuilder _result;
-        public EntitySourceGenerator(Entity entity)
+        public EntitySourceGenerator(Entity entity) : base()
         {
             _entity = entity;
             _result = new StringBuilder();
@@ -21,16 +24,19 @@ namespace FlexRM.Core.Application.Generation
 
         public string Generate()
         {
-            AddUsing("Sustem");
-            AddUsing("System.Collections.Generic");
-            AddUsing("System.Linq");
-            AddUsing("System.Text");
-            AddUsing("System.Threading.Tasks");
+            AddUsings(new List<string>()
+            {
+                "System",
+                "System.Collections.Generic",
+                "System.Linq",
+                "System.Text",
+                "System.Threading.Tasks"
+            });
 
             AddNamespace("FlexRM.Generated.Domain.Entities");
             AddClass(_entity.Name);
 
-            foreach(var column in _entity.Columns)
+            foreach (var column in _entity.Columns)
             {
                 string type = string.Empty;
                 switch (column.Type)
@@ -56,40 +62,7 @@ namespace FlexRM.Core.Application.Generation
                 AddProperty(type, column.Name);
             }
 
-            CloseBrackets();
-
-            return _result.ToString();
-        }
-
-        protected void AddUsing(string name)
-        {
-            _result.AppendLine(EntitySourceSnippets.GetUsing(name));
-        }
-
-        protected void AddNamespace(string name)
-        {
-            _result.AppendLine(EntitySourceSnippets.GetNamespace(name));
-            _result.AppendLine(EntitySourceSnippets.OpenBracket);
-        }
-
-        protected void AddClass(string name)
-        {
-            _result.AppendLine(EntitySourceSnippets.GetClass(name));
-            _result.AppendLine(EntitySourceSnippets.OpenBracket);
-        }
-
-        protected void AddProperty(string type, string name)
-        {
-            _result.AppendLine(EntitySourceSnippets.GetProperty(type, name));
-        }
-
-        protected void CloseBrackets()
-        {
-            var result = _result.ToString();
-            int countOpen = result.Count(c => c.ToString() == EntitySourceSnippets.OpenBracket);
-            int countClose = result.Count(c => c.ToString() == EntitySourceSnippets.CloseBracket);
-            for(int i = 0; i < countOpen - countClose; i++)
-                _result.AppendLine(EntitySourceSnippets.CloseBracket);
+            return base.ToString();
         }
     }
 }
