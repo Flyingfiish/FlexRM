@@ -18,11 +18,15 @@ namespace FlexRM.Core.Application.Generation.Common
         private NamespaceDeclarationSyntax _namespaceDeclaration;
         private ClassDeclarationSyntax _classDeclaration;
         private List<PropertyDeclarationSyntax> _properties;
+        private List<MethodDeclarationSyntax> _methods;
+
         public SourceGenerator()
         {
             _root = SyntaxFactory.CompilationUnit();
             _properties = new List<PropertyDeclarationSyntax>();
+            _methods = new List<MethodDeclarationSyntax>();
         }
+
         protected void AddUsings(List<string> usings)
         {
             _root = _root.AddUsings(usings.Select(us => SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(us))).ToArray());
@@ -49,11 +53,29 @@ namespace FlexRM.Core.Application.Generation.Common
                 ));
         }
 
+        protected void AddMethod(string name, string returnType, List<string> bodyStatements/*, params string[] modifiers*/)
+        {
+            MethodDeclarationSyntax method = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName(returnType), name)
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+                .AddBodyStatements(bodyStatements.Select(statement => GetStatementFromText(statement)).ToArray());
+
+            _methods.Add(method);
+        }
+
+        private StatementSyntax GetStatementFromText(string statement)
+        {
+            return (StatementSyntax)CSharpSyntaxTree.ParseText(statement).GetRoot()
+                .ChildNodes().First()
+                .ChildNodes().First();
+        }
+
         public override string ToString()
         {
             _classDeclaration = _classDeclaration.AddMembers(_properties.ToArray());
+            _classDeclaration = _classDeclaration.AddMembers(_methods.ToArray());
             _namespaceDeclaration = _namespaceDeclaration.AddMembers(_classDeclaration);
             _root = _root.AddMembers(_namespaceDeclaration);
+
 
             return _root.NormalizeWhitespace().ToFullString();
         }

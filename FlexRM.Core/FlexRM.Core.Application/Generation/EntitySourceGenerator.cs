@@ -60,6 +60,7 @@ namespace FlexRM.Core.Application.Generation
                 if (column.Type == Domain.Enums.ColumnTypes.Entity)
                     AddProperty("Guid", $"{column.Name}Id");
                 AddProperty(type, column.Name);
+                AddMethod("Test", "void", new List<string>() { "Console.WriteLine(\"ss\");" });
             }
 
             return base.ToString();
