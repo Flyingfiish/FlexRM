@@ -34,7 +34,7 @@ namespace FlexRM.Core.Application.Generation
             });
 
             AddNamespace("FlexRM.Generated.Domain.Entities");
-            AddClass(_entity.Name);
+            AddClass(_entity.Name, new List<string>() { "Base", "ISsss" });
 
             foreach (var column in _entity.Columns)
             {

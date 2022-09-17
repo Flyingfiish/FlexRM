@@ -15,8 +15,8 @@ namespace FlexRM.Core.Application.Generation.Common
     public class SourceGenerator
     {
         private CompilationUnitSyntax _root;
-        private NamespaceDeclarationSyntax _namespaceDeclaration;
-        private ClassDeclarationSyntax _classDeclaration;
+        private NamespaceDeclarationSyntax? _namespaceDeclaration;
+        private ClassDeclarationSyntax? _classDeclaration;
         private List<PropertyDeclarationSyntax> _properties;
         private List<MethodDeclarationSyntax> _methods;
 
@@ -37,10 +37,12 @@ namespace FlexRM.Core.Application.Generation.Common
             _namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName(name));
         }
 
-        protected void AddClass(string name)
+        protected void AddClass(string name, List<string>? baseTypes = null)
         {
             _classDeclaration = SyntaxFactory.ClassDeclaration(name)
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
+            if (baseTypes != null)
+                _classDeclaration = _classDeclaration.AddBaseListTypes(baseTypes.Select((type, index) => SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseName(type))).ToArray());
         }
 
         protected void AddProperty(string type, string name)
@@ -55,11 +57,9 @@ namespace FlexRM.Core.Application.Generation.Common
 
         protected void AddMethod(string name, string returnType, List<string> bodyStatements/*, params string[] modifiers*/)
         {
-            MethodDeclarationSyntax method = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName(returnType), name)
+            _methods.Add(SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName(returnType), name)
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
-                .AddBodyStatements(bodyStatements.Select(statement => GetStatementFromText(statement)).ToArray());
-
-            _methods.Add(method);
+                .AddBodyStatements(bodyStatements.Select(GetStatementFromText).ToArray()));
         }
 
         private StatementSyntax GetStatementFromText(string statement)
@@ -75,7 +75,6 @@ namespace FlexRM.Core.Application.Generation.Common
             _classDeclaration = _classDeclaration.AddMembers(_methods.ToArray());
             _namespaceDeclaration = _namespaceDeclaration.AddMembers(_classDeclaration);
             _root = _root.AddMembers(_namespaceDeclaration);
-
 
             return _root.NormalizeWhitespace().ToFullString();
         }
